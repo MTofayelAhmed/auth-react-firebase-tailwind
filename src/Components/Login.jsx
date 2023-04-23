@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { authContext } from "../providers/AuthProvider";
 
 const Login = () => {
+const {signIn, googleSignIn}= useContext(authContext)
+
+
   const handleLogin = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -9,7 +13,26 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
     console.log(email, password);
+    signIn(email, password)
+    .then(result=> {
+      const signInUser = result.user;
+      console.log(signInUser)
+      form.reset();
+    })
+    .catch(error=> {
+      console.log(error)
+    })
   };
+
+  const handleGoogleSignIn = ()=>{
+    googleSignIn()
+    .then(result =>{
+      console.log(result.user)
+    })
+    .catch(error=> {
+      console.log(error)
+    })
+  }
 
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -53,6 +76,8 @@ const Login = () => {
             </div>
           </form>
           <Link to='/register'><button className="btn btn-link">New to Auth Master ?? </button></Link>
+          <button onClick={handleGoogleSignIn} className="btn btn-primary">google SignIn</button>
+       
         </div>
       </div>
     </div>
